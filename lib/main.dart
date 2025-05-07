@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'Views/calenderView.dart';
 import 'Views/homeView.dart';
 import 'Views/notesView.dart';
 import 'Views/toDoView.dart';
 import 'Views/waterLogView.dart';
 
-void main() {
+void main() async {
   runApp(NoteApp());
 }
 

@@ -40,6 +40,9 @@ class _NotesViewState extends State<NotesView> {
                 ),
                 TextField(
                   controller: contentController,
+                  maxLines: 3, // Allow infinite lines (text will wrap)
+                  minLines: 1, // Minimum number of lines
+                  keyboardType: TextInputType.multiline, // Make it multiline
                   decoration: InputDecoration(labelText: 'Content'),
                 ),
               ],

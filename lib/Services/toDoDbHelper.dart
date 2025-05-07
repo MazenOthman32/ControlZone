@@ -20,7 +20,8 @@ class TodoDatabase {
       CREATE TABLE todos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         task TEXT NOT NULL,
-        isDone INTEGER NOT NULL
+        isDone INTEGER NOT NULL,
+        category TEXT NOT NULL DEFAULT 'General'
       )
     ''');
   }

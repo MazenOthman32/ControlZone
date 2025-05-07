@@ -24,14 +24,35 @@ class _TodoViewState extends State<TodoView> {
 
   void _showTaskDialog({Todo? todo}) {
     final controller = TextEditingController(text: todo?.task);
+    String selectedCategory = todo?.category ?? 'General';
+
     showDialog(
       context: context,
       builder:
           (_) => AlertDialog(
             title: Text(todo == null ? 'New Task' : 'Edit Task'),
-            content: TextField(
-              controller: controller,
-              decoration: InputDecoration(labelText: 'Task'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: controller,
+                  decoration: InputDecoration(labelText: 'Task'),
+                ),
+                SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedCategory,
+                  items:
+                      ['General', 'Work', 'Study', 'Personal', 'Shopping'].map((
+                        cat,
+                      ) {
+                        return DropdownMenuItem(value: cat, child: Text(cat));
+                      }).toList(),
+                  onChanged: (value) {
+                    if (value != null) selectedCategory = value;
+                  },
+                  decoration: InputDecoration(labelText: 'Category'),
+                ),
+              ],
             ),
             actions: [
               TextButton(
@@ -40,12 +61,15 @@ class _TodoViewState extends State<TodoView> {
                   if (text.isEmpty) return;
 
                   if (todo == null) {
-                    await TodoDatabase.instance.create(Todo(task: text));
+                    await TodoDatabase.instance.create(
+                      Todo(task: text, category: selectedCategory),
+                    );
                   } else {
                     await TodoDatabase.instance.update(
-                      todo.copyWith(task: text),
+                      todo.copyWith(task: text, category: selectedCategory),
                     );
                   }
+
                   Navigator.pop(context);
                   refreshTodos();
                 },
@@ -66,37 +90,59 @@ class _TodoViewState extends State<TodoView> {
     refreshTodos();
   }
 
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case 'Work':
+        return Colors.blue.shade100;
+      case 'Study':
+        return Colors.orange.shade100;
+      case 'Personal':
+        return Colors.green.shade100;
+      case 'Shopping':
+        return Colors.purple.shade100;
+      default:
+        return Colors.grey.shade200;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('To-Do List')),
-      body: ListView.builder(
-        itemCount: todos.length,
-        itemBuilder: (_, index) {
-          final todo = todos[index];
-          return ListTile(
-            title: Text(
-              todo.task,
-              style: TextStyle(
-                decoration: todo.isDone ? TextDecoration.lineThrough : null,
-              ),
-            ),
-            leading: Checkbox(
-              value: todo.isDone,
-              onChanged: (_) => _toggleDone(todo),
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _deleteTask(todo.id!),
-            ),
-            onTap: () => _showTaskDialog(todo: todo),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showTaskDialog(),
-        child: Icon(Icons.add),
-      ),
+    return FloatingActionButton(
+      onPressed: () => _showTaskDialog(),
+      child: Icon(Icons.add),
     );
+    //   Scaffold(
+    //   body: ListView.builder(
+    //     itemCount: todos.length,
+    //     itemBuilder: (_, index) {
+    //       final todo = todos[index];
+    //       return Card(
+    //         color: _getCategoryColor(todo.category),
+    //         child: ListTile(
+    //           title: Text(
+    //             todo.task,
+    //             style: TextStyle(
+    //               decoration: todo.isDone ? TextDecoration.lineThrough : null,
+    //             ),
+    //           ),
+    //           subtitle: Text(todo.category),
+    //           leading: Checkbox(
+    //             value: todo.isDone,
+    //             onChanged: (_) => _toggleDone(todo),
+    //           ),
+    //           trailing: IconButton(
+    //             icon: Icon(Icons.delete, color: Colors.red),
+    //             onPressed: () => _deleteTask(todo.id!),
+    //           ),
+    //           onTap: () => _showTaskDialog(todo: todo),
+    //         ),
+    //       );
+    //     },
+    //   ),
+    //   floatingActionButton: FloatingActionButton(
+    //     onPressed: () => _showTaskDialog(),
+    //     child: Icon(Icons.add),
+    //   ),
+    // );
   }
 }
