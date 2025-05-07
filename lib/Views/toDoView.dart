@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../Models/toDoModel.dart';
 import '../Services/toDoDbHelper.dart';
@@ -22,60 +23,104 @@ class _TodoViewState extends State<TodoView> {
     setState(() {});
   }
 
-  void _showTaskDialog({Todo? todo}) {
+  void _showTaskSheet({Todo? todo}) {
     final controller = TextEditingController(text: todo?.task);
-    String selectedCategory = todo?.category ?? 'General';
+    String selectedCategory = todo?.category ?? 'Work';
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder:
-          (_) => AlertDialog(
-            title: Text(todo == null ? 'New Task' : 'Edit Task'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: controller,
-                  decoration: InputDecoration(labelText: 'Task'),
-                ),
-                SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: selectedCategory,
-                  items:
-                      ['General', 'Work', 'Study', 'Personal', 'Shopping'].map((
-                        cat,
-                      ) {
-                        return DropdownMenuItem(value: cat, child: Text(cat));
-                      }).toList(),
-                  onChanged: (value) {
-                    if (value != null) selectedCategory = value;
-                  },
-                  decoration: InputDecoration(labelText: 'Category'),
-                ),
-              ],
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 60,
+              left: 20,
+              right: 20,
+              top: 24,
             ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  final text = controller.text.trim();
-                  if (text.isEmpty) return;
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    todo == null ? 'New Task' : 'Edit Task',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                      labelText: 'Task',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    value: selectedCategory,
+                    items:
+                        [
+                          'Work',
+                          'Build a skill',
+                          'Family Time',
+                          'Study Time',
+                          'Sport',
+                          'Hobie',
+                        ].map((cat) {
+                          return DropdownMenuItem(value: cat, child: Text(cat));
+                        }).toList(),
+                    onChanged: (value) {
+                      if (value != null) selectedCategory = value;
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Category',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final text = controller.text.trim();
+                      if (text.isEmpty) return;
 
-                  if (todo == null) {
-                    await TodoDatabase.instance.create(
-                      Todo(task: text, category: selectedCategory),
-                    );
-                  } else {
-                    await TodoDatabase.instance.update(
-                      todo.copyWith(task: text, category: selectedCategory),
-                    );
-                  }
+                      if (todo == null) {
+                        await TodoDatabase.instance.create(
+                          Todo(task: text, category: selectedCategory),
+                        );
+                      } else {
+                        await TodoDatabase.instance.update(
+                          todo.copyWith(task: text, category: selectedCategory),
+                        );
+                      }
 
-                  Navigator.pop(context);
-                  refreshTodos();
-                },
-                child: Text('Save'),
+                      Navigator.pop(context);
+                      refreshTodos();
+                    },
+                    icon: Icon(Icons.save, color: Colors.white),
+                    label: Text('Save', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
     );
   }
@@ -108,8 +153,9 @@ class _TodoViewState extends State<TodoView> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () => _showTaskDialog(),
-      child: Icon(Icons.add),
+      backgroundColor: Colors.teal,
+      onPressed: () => _showTaskSheet(),
+      child: Icon(Icons.add, color: Colors.white),
     );
     //   Scaffold(
     //   body: ListView.builder(

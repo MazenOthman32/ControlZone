@@ -19,8 +19,8 @@ class NoteApp extends StatelessWidget {
         '/': (context) => HomeView(),
         '/notes': (context) => NotesView(),
         '/todo': (context) => TodoView(),
-        '/calendar': (context) => CalendarScreen(),
-        '/water': (context) => WaterTrackerScreen(),
+        '/calendar': (context) => CalenderView(),
+        '/water': (context) => WaterTrackerView(),
       },
     );
   }

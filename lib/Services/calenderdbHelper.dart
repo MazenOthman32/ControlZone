@@ -51,4 +51,15 @@ class EventDatabase {
     final db = await instance.database;
     return db.delete('events', where: 'id = ?', whereArgs: [id]);
   }
+
+  // ✅ NEW: update method
+  Future<int> update(Event event) async {
+    final db = await instance.database;
+    return await db.update(
+      'events',
+      event.toMap(),
+      where: 'id = ?',
+      whereArgs: [event.id],
+    );
+  }
 }

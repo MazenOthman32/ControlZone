@@ -110,7 +110,16 @@ class _FocusViewState extends State<FocusView> with WidgetsBindingObserver {
       child: Scaffold(
         backgroundColor: _isInFocusMode ? Colors.black : Colors.white,
         appBar:
-            _isInFocusMode ? null : AppBar(title: const Text('Focus Mode App')),
+            _isInFocusMode
+                ? null
+                : AppBar(
+                  centerTitle: true,
+                  title: const Text(
+                    'Focus Mode App',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.teal,
+                ),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -120,7 +129,7 @@ class _FocusViewState extends State<FocusView> with WidgetsBindingObserver {
                 Icon(
                   _isInFocusMode ? Icons.visibility_off : Icons.visibility,
                   size: 100,
-                  color: _isInFocusMode ? Colors.white : Colors.deepPurple,
+                  color: _isInFocusMode ? Colors.white : Colors.teal,
                 ),
                 const SizedBox(height: 30),
                 Text(
@@ -152,10 +161,12 @@ class _FocusViewState extends State<FocusView> with WidgetsBindingObserver {
                 ElevatedButton.icon(
                   onPressed: _toggleFocusMode,
                   icon: Icon(
+                    color: Colors.black,
                     _isInFocusMode ? Icons.fullscreen_exit : Icons.fullscreen,
                   ),
                   label: Text(
                     _isInFocusMode ? 'Exit Focus Mode' : 'Enter Focus Mode',
+                    style: TextStyle(color: Colors.black),
                   ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(

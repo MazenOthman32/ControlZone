@@ -39,25 +39,38 @@ class _TasksByCategoryViewState extends State<TasksByCategoryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.category} Tasks')),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.teal,
+        title: Text(
+          '${widget.category} Tasks',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       body: ListView.builder(
         itemCount: todos.length,
         itemBuilder: (_, index) {
           final todo = todos[index];
-          return ListTile(
-            title: Text(
-              todo.task,
-              style: TextStyle(
-                decoration: todo.isDone ? TextDecoration.lineThrough : null,
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: ListTile(
+              shape: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-            ),
-            leading: Checkbox(
-              value: todo.isDone,
-              onChanged: (_) => _toggleDone(todo),
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _deleteTask(todo.id!),
+              title: Text(
+                todo.task,
+                style: TextStyle(
+                  decoration: todo.isDone ? TextDecoration.lineThrough : null,
+                ),
+              ),
+              leading: Checkbox(
+                value: todo.isDone,
+                onChanged: (_) => _toggleDone(todo),
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.delete, color: Colors.red.shade300),
+                onPressed: () => _deleteTask(todo.id!),
+              ),
             ),
           );
         },

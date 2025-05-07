@@ -1,8 +1,7 @@
+import 'package:Control_Zone/Views/waterLogView.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled/Views/notesView.dart';
-import 'package:untitled/Views/toDoView.dart';
-import 'package:untitled/Views/waterLogView.dart';
-
+import 'notesView.dart';
+import 'test.dart';
 import 'calenderView.dart';
 import 'categoryView.dart';
 import 'focusView.dart';
@@ -24,8 +23,8 @@ class _HomeViewState extends State<HomeView> {
     _screens.addAll([
       CategorySelectionView(),
       NotesView(),
-      CalendarScreen(),
-      WaterTrackerScreen(),
+      CalenderView(),
+      WaterTrackerView(),
       FocusView(
         onLockChange: (locked) {
           setState(() {
@@ -52,7 +51,7 @@ class _HomeViewState extends State<HomeView> {
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.teal,
         unselectedItemColor: Colors.grey,
         onTap: _onTabTapped,
         items: const [
